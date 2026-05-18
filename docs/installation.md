@@ -1,11 +1,32 @@
 # Installation
 
-This pack supports two shapes:
+This repository is distributed as a ready-to-run Codex pack.
 
-1. **Source repository shape**: `skills/`, `agents/`, `shared/`, `templates/`, `docs/`, `examples/`, `assets/`.
-2. **Runtime shape**: `.agents/skills/`, `.agents/shared/`, `.codex/agents/`, `.codex/config.toml`, and root `AGENTS.md`.
+The core runtime shape is:
 
-The zip already contains both shapes, so it can be inspected as source and opened directly as a runnable Codex project.
+```text
+.agents/skills/
+.agents/shared/
+.codex/agents/
+.codex/config.toml
+AGENTS.md
+```
+
+The full pack also includes user-facing documentation and verification
+materials:
+
+```text
+assets/
+docs/
+examples/
+MANIFEST.md
+README.md
+README_CN.md
+```
+
+Use the full pack when you want someone to install or inspect the complete
+workflow package. Use runtime-only installation when adding the founder workflow
+to an existing project that already has its own README, docs, and examples.
 
 ## Why root `AGENTS.md` is included
 
@@ -68,13 +89,69 @@ List the available AI Native Founder skills and custom agents you can see. Then 
 
 ## Install into another project
 
+### ZIP install, recommended
+
+The simplest install path works the same on Windows and macOS:
+
+1. Download the ZIP from GitHub, or use a release ZIP.
+2. Extract it.
+3. Copy the pack contents into the target project root.
+4. Start a new Codex session from the target project root.
+
+If using GitHub's automatic `Download ZIP`, GitHub usually wraps the files in a
+top-level directory. Open that directory and copy its contents into the target
+project root.
+
+If using a release ZIP that has the pack files directly at the archive root, it
+can be extracted directly into the target project directory.
+
+Full install should place these at the target root:
+
+```text
+AGENTS.md
+.agents/
+.codex/
+assets/
+docs/
+examples/
+MANIFEST.md
+README.md
+README_CN.md
+```
+
+This may overwrite files with the same names in the target project. Back up or
+merge first if needed.
+
+### macOS / Linux command line, optional
+
+Most users do not need this. Use it only if you prefer Terminal and already have
+the pack downloaded locally.
+
+From inside the extracted pack directory:
+
 ```bash
-mkdir -p .agents .codex
-cp -R /path/to/ai-native-founder-skill-pack-full-lifecycle/skills .agents/skills
-cp -R /path/to/ai-native-founder-skill-pack-full-lifecycle/shared .agents/shared
-cp -R /path/to/ai-native-founder-skill-pack-full-lifecycle/agents .codex/agents
-cp /path/to/ai-native-founder-skill-pack-full-lifecycle/templates/AGENTS.md AGENTS.md
-cp /path/to/ai-native-founder-skill-pack-full-lifecycle/templates/config.example.toml .codex/config.toml
+TARGET="/absolute/path/to/target-project"
+
+mkdir -p "$TARGET"
+rsync -av --exclude ".git/" ./ "$TARGET"/
+```
+
+Replace `TARGET` with the real target project path.
+
+### Runtime-only install
+
+Use this when the target project only needs Codex-visible runtime files:
+
+```bash
+PACK="/absolute/path/to/ai-native-founder-skill-pack-full-lifecycle"
+
+mkdir -p .agents/skills .agents/shared .codex/agents
+
+cp -R "$PACK/.agents/skills/." .agents/skills/
+cp -R "$PACK/.agents/shared/." .agents/shared/
+cp -R "$PACK/.codex/agents/." .codex/agents/
+cp "$PACK/.codex/config.toml" .codex/config.toml
+cp "$PACK/AGENTS.md" AGENTS.md
 ```
 
 Why copy `shared/`? The skills reference common material through paths like `../../shared/references/lifecycle-stage-gates.md`. If only `skills/` is copied, the skills still work from embedded instructions but lose access to templates, references, and scripts.
@@ -93,13 +170,18 @@ This is no longer the default because Launch and Scale are core stages in the pl
 
 ## Global mode
 
+Global mode is optional. Prefer project-local install unless you intentionally
+want this pack available across many Codex projects.
+
 ```bash
-mkdir -p ~/.agents ~/.codex
-cp -R /path/to/ai-native-founder-skill-pack-full-lifecycle/skills ~/.agents/skills
-cp -R /path/to/ai-native-founder-skill-pack-full-lifecycle/shared ~/.agents/shared
-cp -R /path/to/ai-native-founder-skill-pack-full-lifecycle/agents ~/.codex/agents
-cp /path/to/ai-native-founder-skill-pack-full-lifecycle/templates/AGENTS.md ~/.codex/AGENTS.md
-cp /path/to/ai-native-founder-skill-pack-full-lifecycle/templates/config.example.toml ~/.codex/config.toml
+PACK="/absolute/path/to/ai-native-founder-skill-pack-full-lifecycle"
+
+mkdir -p ~/.agents/skills ~/.agents/shared ~/.codex/agents
+
+cp -R "$PACK/.agents/skills/." ~/.agents/skills/
+cp -R "$PACK/.agents/shared/." ~/.agents/shared/
+cp -R "$PACK/.codex/agents/." ~/.codex/agents/
+cp "$PACK/.codex/config.toml" ~/.codex/config.toml
 ```
 
 ## Verify
